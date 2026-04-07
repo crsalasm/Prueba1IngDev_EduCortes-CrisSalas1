@@ -18,14 +18,24 @@ app.get('/health', (req, res) => {
 
 app.get('/api/bicicletas', (req, res) => {
   const categoria = req.query.categoria
+  const orden = req.query.orden
+  let resultado = [...bicicletas]
 
   if (!categoria) {
-    res.json(bicicletas)
-    return
+    resultado = [...bicicletas]
+  } else {
+    resultado = bicicletas.filter((item) => item.categoria === categoria)
   }
 
-  const filtradas = bicicletas.filter((item) => item.categoria === categoria)
-  res.json(filtradas)
+  if (orden === 'asc') {
+    resultado.sort((a, b) => a.precio - b.precio)
+  }
+
+  if (orden === 'desc') {
+    resultado.sort((a, b) => b.precio - a.precio)
+  }
+
+  res.json(resultado)
 })
 
 app.get('/api/bicicletas/:id', (req, res) => {
