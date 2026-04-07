@@ -29,7 +29,14 @@ app.get('/api/bicicletas', (req, res) => {
 })
 
 app.get('/api/bicicletas/:id', (req, res) => {
-  const bicicleta = bicicletas.find((item) => item.id === Number(req.params.id))
+  const id = Number(req.params.id)
+
+  if (Number.isNaN(id)) {
+    res.status(400).json({ error: 'El identificador debe ser numerico' })
+    return
+  }
+
+  const bicicleta = bicicletas.find((item) => item.id === id)
 
   if (!bicicleta) {
     res.status(404).json({ error: 'Bicicleta no encontrada' })
