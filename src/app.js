@@ -30,7 +30,13 @@ app.get('/api/bicicletas', (req, res) => {
 
 app.get('/api/bicicletas/:id', (req, res) => {
   const bicicleta = bicicletas.find((item) => item.id === Number(req.params.id))
-  res.json(bicicleta || null)
+
+  if (!bicicleta) {
+    res.status(404).json({ error: 'Bicicleta no encontrada' })
+    return
+  }
+
+  res.json(bicicleta)
 })
 
 module.exports = { app, bicicletas }
