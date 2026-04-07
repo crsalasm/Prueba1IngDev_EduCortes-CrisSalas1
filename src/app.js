@@ -18,14 +18,18 @@ app.get('/health', (req, res) => {
 
 app.get('/api/bicicletas', (req, res) => {
   const categoria = req.query.categoria
+  const precioMin = Number(req.query.precioMin)
+  let resultado = [...bicicletas]
 
-  if (!categoria) {
-    res.json(bicicletas)
-    return
+  if (categoria) {
+    resultado = resultado.filter((item) => item.categoria === categoria)
   }
 
-  const filtradas = bicicletas.filter((item) => item.categoria === categoria)
-  res.json(filtradas)
+  if (!Number.isNaN(precioMin) && req.query.precioMin !== undefined) {
+    resultado = resultado.filter((item) => item.precio >= precioMin)
+  }
+
+  res.json(resultado)
 })
 
 app.get('/api/bicicletas/:id', (req, res) => {
