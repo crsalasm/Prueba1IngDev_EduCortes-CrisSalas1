@@ -17,7 +17,15 @@ app.get('/health', (req, res) => {
 })
 
 app.get('/api/bicicletas', (req, res) => {
-  res.json(bicicletas)
+  const categoria = req.query.categoria
+
+  if (!categoria) {
+    res.json(bicicletas)
+    return
+  }
+
+  const filtradas = bicicletas.filter((item) => item.categoria === categoria)
+  res.json(filtradas)
 })
 
 app.get('/api/bicicletas/:id', (req, res) => {
