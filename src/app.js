@@ -17,7 +17,20 @@ app.get('/health', (req, res) => {
 })
 
 app.get('/api/bicicletas', (req, res) => {
-  res.json(bicicletas)
+  const categoria = req.query.categoria
+
+  if (!categoria) {
+    res.json(bicicletas)
+    return
+  }
+
+  const filtradas = bicicletas.filter((item) => item.categoria === categoria)
+  res.json(filtradas)
+})
+
+app.get('/api/bicicletas/:id', (req, res) => {
+  const bicicleta = bicicletas.find((item) => item.id === Number(req.params.id))
+  res.json(bicicleta || null)
 })
 
 module.exports = { app, bicicletas }
