@@ -36,6 +36,11 @@ async function main() {
   assert.equal(bicicletas.body.length, 3)
   assert.equal(bicicletas.body[0].nombre, 'Mountain Bike')
 
+  const bicicleta = await requestJson('/api/bicicletas/2')
+  assert.equal(bicicleta.response.status, 200)
+  assert.equal(bicicleta.body.id, 2)
+  assert.equal(bicicleta.body.nombre, 'BMX')
+
   console.log('Pruebas OK')
 }
 
