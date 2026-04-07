@@ -46,6 +46,10 @@ async function main() {
   assert.equal(bicicleta.body.id, 2)
   assert.equal(bicicleta.body.nombre, 'BMX')
 
+  const bicicletaNoEncontrada = await requestJson('/api/bicicletas/999')
+  assert.equal(bicicletaNoEncontrada.response.status, 404)
+  assert.equal(bicicletaNoEncontrada.body.error, 'Bicicleta no encontrada')
+
   console.log('Pruebas OK')
 }
 
