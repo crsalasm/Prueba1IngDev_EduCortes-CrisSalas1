@@ -1,16 +1,23 @@
 {
   "name": "prueba1ingdev_educortes-crissalas-main",
   "version": "1.0.0",
-  "description": "Microservicio base de catalogo de bicicletas para la Evaluacion Parcial 1 de Ingenieria DevOps.",
+  "description": "Microservicio base de catalogo de bicicletas para la Evaluacion Parcial 2 de Ingenieria DevOps.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "test": "node test/run-tests.js"
+    "test": "node test/run-tests.js",
+    "audit:high": "npm audit --audit-level=high",
+    "docker:build": "docker build -t masterbikes-api:local .",
+    "compose:up": "docker compose up -d --build",
+    "compose:down": "docker compose down"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1"
