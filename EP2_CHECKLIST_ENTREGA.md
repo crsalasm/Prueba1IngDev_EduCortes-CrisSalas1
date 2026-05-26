@@ -14,7 +14,7 @@
 
 - IE1 Contenedores: cubierto con `Dockerfile` y build en GitHub Actions.
 - IE2 Pruebas automatizadas: cubierto con `npm test` en el job `test`.
-- IE3 Seguridad y escalabilidad: cubierto con `npm audit`, Trivy, Snyk opcional, limites de recursos y configuraciones de seguridad en Compose.
+- IE3 Seguridad y escalabilidad: cubierto con bloqueo por `npm audit`, Trivy como evidencia del escaneo de imagen, Snyk opcional, limites de recursos y configuraciones de seguridad en Compose.
 - IE4 Despliegue automatico simulado: cubierto con el job `deploy-simulado` usando Docker Compose.
 - IE5 Orquestacion: cubierto con `docker-compose.yml`.
 

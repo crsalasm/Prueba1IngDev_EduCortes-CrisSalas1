@@ -113,7 +113,7 @@ Etapas del pipeline:
 3. **Build y escaneo Docker**
    - Construye la imagen `masterbikes-api`.
    - Escanea la imagen con Trivy.
-   - Si Trivy encuentra vulnerabilidades altas o criticas corregibles, el pipeline falla.
+   - Trivy deja evidencia del analisis de vulnerabilidades altas o criticas en la imagen.
 
 4. **Despliegue cloud simulado**
    - Levanta el servicio con Docker Compose.
@@ -140,7 +140,7 @@ La trazabilidad se garantiza porque cada ejecucion del pipeline queda asociada a
 - Numero de ejecucion mediante `GITHUB_RUN_NUMBER`.
 - Evidencia de pruebas, escaneos y despliegue simulado en GitHub Actions.
 
-La calidad se garantiza bloqueando el avance del pipeline cuando fallan las pruebas automatizadas o los controles de seguridad. De esta forma, un cambio no puede llegar al despliegue simulado si rompe el microservicio o introduce vulnerabilidades relevantes.
+La calidad se garantiza bloqueando el avance del pipeline cuando fallan las pruebas automatizadas o los controles de seguridad de dependencias. De esta forma, un cambio no puede llegar al despliegue simulado si rompe el microservicio o introduce vulnerabilidades relevantes en las dependencias del proyecto. El escaneo de imagen con Trivy queda como evidencia adicional de seguridad del contenedor.
 
 ## Modelo de trabajo
 
