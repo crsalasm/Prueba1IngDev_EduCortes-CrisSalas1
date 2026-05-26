@@ -23,6 +23,7 @@ Endpoints principales:
 - Express
 - Docker
 - Docker Compose
+- Nginx como proxy interno del entorno simulado
 - GitHub Actions
 - Dependabot
 - Snyk opcional mediante `SNYK_TOKEN`
@@ -82,13 +83,17 @@ docker compose down
 
 ## Orquestacion y escalabilidad
 
-La orquestacion se implementa con `docker-compose.yml`, que define el servicio `masterbikes-api` con:
+La orquestacion se implementa con `docker-compose.yml`, que define el servicio `masterbikes-api` y un proxy `masterbikes-proxy` basado en Nginx.
+
+El proxy publica `localhost:3000` y redirige el trafico hacia las replicas internas del microservicio. Esto evita conflictos de puertos en el host y permite simular una arquitectura cloud con balanceo interno.
+
+El servicio `masterbikes-api` incluye:
 
 - Construccion automatica desde el `Dockerfile`.
 - Healthcheck del endpoint `/health`.
 - Politica de reinicio `unless-stopped`.
 - Limites y reservas de CPU y memoria.
-- Parametro de replicas documentado en la seccion `deploy`.
+- Parametro de replicas en la seccion `deploy`.
 - Configuracion de seguridad con filesystem de solo lectura, `no-new-privileges` y eliminacion de capacidades Linux.
 
 Esta configuracion simula un entorno cloud basado en contenedores y permite validar que el microservicio pueda ejecutarse de forma estable antes de pasar a produccion.

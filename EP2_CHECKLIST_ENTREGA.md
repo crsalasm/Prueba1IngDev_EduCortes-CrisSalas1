@@ -5,6 +5,7 @@
 - `Dockerfile`: contiene el microservicio con Node.js 20 Alpine, usuario no root y healthcheck.
 - `.dockerignore`: reduce el contexto de build de Docker.
 - `docker-compose.yml`: simula el despliegue cloud y define parametros de seguridad, recursos y healthcheck.
+- `nginx.conf`: configura un proxy para publicar el servicio y permitir replicas internas sin conflicto de puertos.
 - `.github/workflows/ci-cd.yml`: pipeline CI/CD completo en GitHub Actions.
 - `.github/dependabot.yml`: alertas y actualizaciones automaticas de dependencias.
 - `README.md`: documentacion del pipeline, trazabilidad, calidad, seguridad y ejecucion.
@@ -16,7 +17,7 @@
 - IE2 Pruebas automatizadas: cubierto con `npm test` en el job `test`.
 - IE3 Seguridad y escalabilidad: cubierto con bloqueo por `npm audit`, Trivy como evidencia del escaneo de imagen, Snyk opcional, limites de recursos y configuraciones de seguridad en Compose.
 - IE4 Despliegue automatico simulado: cubierto con el job `deploy-simulado` usando Docker Compose.
-- IE5 Orquestacion: cubierto con `docker-compose.yml`.
+- IE5 Orquestacion: cubierto con `docker-compose.yml`, replicas internas del microservicio y proxy Nginx.
 
 ## Pasos para subirlo a GitHub
 
