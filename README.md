@@ -170,5 +170,5 @@ Se utilizo IA como apoyo para estructurar documentacion, revisar configuraciones
 
 ## Integrantes
 
-- Eduardo Cortes
-- Cristian Salas
+- Eduardo Cortés Monroy
+- Cristian Salas Millón
