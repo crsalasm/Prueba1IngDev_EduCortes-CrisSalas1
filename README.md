@@ -1,35 +1,35 @@
 # Proyecto DevOps - MasterBikes
 
-## Descripcion
+## Descripción
 
-Este repositorio contiene el microservicio de catalogo de bicicletas de MasterBikes y la automatizacion CI/CD solicitada en la Evaluacion Parcial 2 de Ingenieria DevOps.
+Este repositorio contiene el microservicio de catálogo de bicicletas de MasterBikes y la automatización CI/CD desarrollada para la Evaluación Parcial 2 de Ingeniería DevOps.
 
-El objetivo del pipeline es automatizar la integracion, validacion, seguridad, construccion de contenedores y despliegue simulado del microservicio trabajado en la evaluacion anterior.
+El objetivo del pipeline es automatizar la integración, validación, seguridad, construcción de contenedores y despliegue simulado del microservicio.
 
 ## Microservicio
 
-Aplicacion Node.js con Express.
+Aplicación Node.js desarrollada con Express.
 
-Endpoints principales:
+### Endpoints principales
 
-- `GET /health`: verifica que el servicio este activo.
-- `GET /api/bicicletas`: devuelve el catalogo completo.
-- `GET /api/bicicletas?categoria=ruta`: filtra bicicletas por categoria.
-- `GET /api/bicicletas/:id`: obtiene una bicicleta por identificador.
+* `GET /health`: verifica que el servicio esté activo.
+* `GET /api/bicicletas`: devuelve el catálogo completo.
+* `GET /api/bicicletas?categoria=ruta`: filtra bicicletas por categoría.
+* `GET /api/bicicletas/:id`: obtiene una bicicleta por identificador.
 
-## Tecnologias
+## Tecnologías
 
-- Node.js 20
-- Express
-- Docker
-- Docker Compose
-- Nginx como proxy interno del entorno simulado
-- GitHub Actions
-- Dependabot
-- Snyk opcional mediante `SNYK_TOKEN`
-- Trivy para escaneo de imagen Docker
+* Node.js 20
+* Express
+* Docker
+* Docker Compose
+* Nginx
+* GitHub Actions
+* Dependabot
+* SonarCloud
+* Trivy
 
-## Ejecucion local
+## Ejecución local
 
 Instalar dependencias:
 
@@ -63,7 +63,7 @@ Construir la imagen Docker:
 docker build -t masterbikes-api:local .
 ```
 
-Ejecutar el entorno simulado con Docker Compose:
+Ejecutar el entorno simulado:
 
 ```bash
 docker compose up -d --build
@@ -81,94 +81,100 @@ Detener el entorno:
 docker compose down
 ```
 
-## Orquestacion y escalabilidad
+## Orquestación y escalabilidad
 
-La orquestacion se implementa con `docker-compose.yml`, que define el servicio `masterbikes-api` y un proxy `masterbikes-proxy` basado en Nginx.
+La orquestación se realiza mediante Docker Compose. El entorno incluye dos réplicas del servicio `masterbikes-api` y un contenedor Nginx que actúa como proxy inverso.
 
-El proxy publica `localhost:3000` y redirige el trafico hacia las replicas internas del microservicio. Esto evita conflictos de puertos en el host y permite simular una arquitectura cloud con balanceo interno.
+La configuración incorpora:
 
-El servicio `masterbikes-api` incluye:
+* Construcción automática desde Dockerfile.
+* Healthcheck del endpoint `/health`.
+* Reinicio automático (`unless-stopped`).
+* Límites y reservas de CPU y memoria.
+* Réplicas del microservicio.
+* Configuraciones básicas de seguridad (`read_only`, `no-new-privileges` y eliminación de capacidades Linux).
 
-- Construccion automatica desde el `Dockerfile`.
-- Healthcheck del endpoint `/health`.
-- Politica de reinicio `unless-stopped`.
-- Limites y reservas de CPU y memoria.
-- Parametro de replicas en la seccion `deploy`.
-- Configuracion de seguridad con filesystem de solo lectura, `no-new-privileges` y eliminacion de capacidades Linux.
-
-Esta configuracion simula un entorno cloud basado en contenedores y permite validar que el microservicio pueda ejecutarse de forma estable antes de pasar a produccion.
+Esta arquitectura permite simular un entorno cloud basado en contenedores.
 
 ## Pipeline CI/CD
 
-El workflow principal esta en `.github/workflows/ci-cd.yml`.
+El workflow principal se encuentra en:
 
-Etapas del pipeline:
+```text
+.github/workflows/ci-cd.yml
+```
 
-1. **Pruebas automatizadas**
-   - Descarga el repositorio.
-   - Configura Node.js 20.
-   - Instala dependencias con `npm ci`.
-   - Ejecuta `npm test`.
+### Etapas del pipeline
 
-2. **Seguridad y calidad**
-   - Ejecuta `npm audit --audit-level=high`.
-   - Si existen vulnerabilidades altas o criticas, el pipeline falla y bloquea el despliegue.
-   - Ejecuta Snyk si el repositorio tiene configurado el secreto `SNYK_TOKEN`.
+#### 1. Pruebas automatizadas
 
-3. **Build y escaneo Docker**
-   - Construye la imagen `masterbikes-api`.
-   - Escanea la imagen con Trivy.
-   - Trivy deja evidencia del analisis de vulnerabilidades altas o criticas en la imagen.
+* Descarga el repositorio.
+* Configura Node.js.
+* Instala dependencias.
+* Ejecuta `npm test`.
 
-4. **Despliegue cloud simulado**
-   - Levanta el servicio con Docker Compose.
-   - Valida `/health` con `curl`.
-   - Imprime datos de trazabilidad del repositorio, commit, workflow y numero de ejecucion.
-   - Apaga el entorno al finalizar.
+#### 2. Seguridad y calidad
+
+* Ejecuta `npm audit --audit-level=high`.
+* Ejecuta análisis estático de código con SonarCloud.
+* Si existen problemas críticos de calidad o seguridad, el pipeline puede bloquear su avance.
+
+#### 3. Build y escaneo Docker
+
+* Construye la imagen `masterbikes-api`.
+* Escanea la imagen mediante Trivy.
+* Genera evidencia de vulnerabilidades detectadas.
+
+#### 4. Despliegue cloud simulado
+
+* Levanta el entorno con Docker Compose.
+* Valida el endpoint `/health`.
+* Registra información de trazabilidad.
+* Apaga el entorno al finalizar.
 
 ## Dependabot
 
-El archivo `.github/dependabot.yml` configura revision semanal de:
+El archivo `.github/dependabot.yml` configura revisiones semanales de:
 
-- Dependencias `npm`.
-- Acciones de GitHub Actions.
+* Dependencias npm.
+* GitHub Actions.
 
-Esto permite recibir alertas y pull requests automaticos cuando existan actualizaciones o vulnerabilidades conocidas.
+Esto permite recibir alertas y pull requests automáticos cuando existen actualizaciones o vulnerabilidades conocidas.
 
 ## Trazabilidad y calidad
 
-La trazabilidad se garantiza porque cada ejecucion del pipeline queda asociada a:
+La trazabilidad se garantiza mediante:
 
-- Rama ejecutada.
-- Pull request o push que disparo el workflow.
-- Commit exacto mediante `GITHUB_SHA`.
-- Numero de ejecucion mediante `GITHUB_RUN_NUMBER`.
-- Evidencia de pruebas, escaneos y despliegue simulado en GitHub Actions.
+* Rama ejecutada.
+* Pull Request o Push asociado.
+* Commit exacto (`GITHUB_SHA`).
+* Número de ejecución (`GITHUB_RUN_NUMBER`).
+* Evidencia de pruebas, análisis y despliegue en GitHub Actions.
 
-La calidad se garantiza bloqueando el avance del pipeline cuando fallan las pruebas automatizadas o los controles de seguridad de dependencias. De esta forma, un cambio no puede llegar al despliegue simulado si rompe el microservicio o introduce vulnerabilidades relevantes en las dependencias del proyecto. El escaneo de imagen con Trivy queda como evidencia adicional de seguridad del contenedor.
+La calidad se asegura mediante pruebas automatizadas, análisis de dependencias con npm audit, análisis de código con SonarCloud y escaneo de imágenes Docker con Trivy.
 
 ## Modelo de trabajo
 
-Se mantiene GitFlow:
+Se utiliza GitFlow:
 
-- `main`: version estable.
-- `develop`: integracion.
-- `feature/*`: nuevas funcionalidades.
-- `hotfix/*`: correcciones urgentes.
+* `main`: versión estable.
+* `develop`: integración.
+* `feature/*`: nuevas funcionalidades.
+* `hotfix/*`: correcciones urgentes.
 
 ## Convenciones de commits
 
-- `feat`: nuevas funcionalidades.
-- `fix`: correcciones.
-- `docs`: documentacion.
-- `ci`: integracion continua.
-- `test`: pruebas automatizadas.
+* `feat`: nuevas funcionalidades.
+* `fix`: correcciones.
+* `docs`: documentación.
+* `ci`: integración continua.
+* `test`: pruebas automatizadas.
 
 ## Uso de IA
 
-Se utilizo IA como apoyo para estructurar documentacion, revisar configuraciones DevOps y proponer archivos base para el pipeline CI/CD. Las decisiones tecnicas deben ser revisadas y validadas por los integrantes antes de la entrega.
+Se utilizó IA como apoyo para estructurar documentación, revisar configuraciones DevOps y proponer archivos base para el pipeline CI/CD. Todas las decisiones técnicas fueron revisadas y validadas por los integrantes del proyecto.
 
 ## Integrantes
 
-- Eduardo Cortés Monroy
-- Cristian Salas Millón
+* Eduardo Cortés Monroy
+* Cristian Salas Millón
