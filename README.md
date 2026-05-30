@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este repositorio contiene el microservicio de catálogo de bicicletas de MasterBikes y la automatización CI/CD desarrollada para la Evaluación Parcial 2 de Ingeniería DevOps.
+Este repositorio es la continuación de la ev1 ya que contiene el microservicio de catálogo de bicicletas de MasterBikes, la automatización CI/CD y la Seguridad desarrollada para la Evaluación Parcial 2 de Ingeniería DevOps.
 
 El objetivo del pipeline es automatizar la integración, validación, seguridad, construcción de contenedores y despliegue simulado del microservicio.
 
