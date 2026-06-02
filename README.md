@@ -180,3 +180,4 @@ Se utilizó IA como apoyo para estructurar documentación, revisar configuracion
 * Cristian Salas Millón
 
 * Prueba de ejecución 02-06-2026
+* Validación pipeline CI/CD el 02-06-2026
