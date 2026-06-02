@@ -178,3 +178,5 @@ Se utilizó IA como apoyo para estructurar documentación, revisar configuracion
 
 * Eduardo Cortés Monroy
 * Cristian Salas Millón
+
+* Prueba de ejecución 02-06-2026
