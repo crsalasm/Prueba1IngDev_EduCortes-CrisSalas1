@@ -33,7 +33,7 @@ async function main() {
   const bicicletas = await requestJson('/api/bicicletas')
   assert.equal(bicicletas.response.status, 200)
   assert.equal(Array.isArray(bicicletas.body), true)
-  assert.equal(bicicletas.body.length, 3)
+  assert.equal(bicicletas.body.length, 4)
   assert.equal(bicicletas.body[0].nombre, 'Mountain Bike')
 
   const filtradas = await requestJson('/api/bicicletas?categoria=ruta')
