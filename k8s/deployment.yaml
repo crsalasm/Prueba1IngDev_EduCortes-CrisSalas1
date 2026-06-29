@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: masterbikes-api
+
+spec:
+  replicas: 2
+
+  selector:
+    matchLabels:
+      app: masterbikes-api
+
+  template:
+    metadata:
+      labels:
+        app: masterbikes-api
+
+    spec:
+      containers:
+      - name: masterbikes-api
+        image: zzzouv/masterbikes-api:latest
+
+        ports:
+        - containerPort: 3000
+
+        env:
+        - name: NODE_ENV
+          value: "production"
+
+        - name: PORT
+          value: "3000"
+
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 10
+          periodSeconds: 15
+
+        readinessProbe:
+          httpGet:
+            path: /health
+            port: 3000
+          initialDelaySeconds: 5
+          periodSeconds: 10
+
+        resources:
+          requests:
+            cpu: "250m"
+            memory: "128Mi"
+
+          limits:
+            cpu: "500m"
+            memory: "256Mi"
