@@ -2,48 +2,43 @@
 
 ## Descripción
 
-Este repositorio corresponde a la evolución del proyecto desarrollado durante las Evaluaciones DevOps.
+Este repositorio corresponde al proyecto desarrollado durante las Evaluaciones de Ingeniería DevOps.
 
-Durante la Evaluación Parcial 1 se desarrolló el microservicio del catálogo de bicicletas de MasterBikes.
+El proyecto consiste en un microservicio desarrollado en Node.js para la gestión del catálogo de bicicletas de MasterBikes, incorporando un proceso completo de Integración Continua (CI) y Despliegue Continuo (CD).
 
-En la Evaluación Parcial 2 se incorporó un pipeline CI/CD automatizado con controles de calidad, seguridad y construcción de imágenes Docker.
-
-Finalmente, en la Evaluación Parcial 3 se integró el despliegue del microservicio sobre Kubernetes en AWS, junto con mecanismos de monitoreo, observabilidad y alertas mediante Amazon CloudWatch.
-
-El objetivo del proyecto es automatizar completamente el ciclo de vida del software, garantizando calidad, seguridad, disponibilidad y trazabilidad.
+La solución automatiza el ciclo de vida del software mediante pruebas, análisis de calidad, escaneo de seguridad, construcción de imágenes Docker y despliegue automático en Kubernetes sobre Amazon EC2.
 
 ---
 
-# Microservicio MasterBikes Tienda
+# Microservicio
 
-Aplicación desarrollada en Node.js utilizando Express.
+Aplicación desarrollada con **Node.js** y **Express**.
 
-## Endpoints principales
+## Endpoints
 
-* `GET /health`
-* `GET /api/bicicletas`
-* `GET /api/bicicletas?categoria=ruta`
-* `GET /api/bicicletas/:id`
+- `GET /health`
+- `GET /api/bicicletas`
+- `GET /api/bicicletas?categoria=ruta`
+- `GET /api/bicicletas/:id`
 
 ---
 
 # Tecnologías utilizadas
 
-* Node.js 20
-* Express
-* Docker
-* Docker Compose
-* Kubernetes (K3s)
-* Nginx
-* GitHub Actions
-* GitHub
-* Docker Hub
-* Amazon EC2
-* Amazon CloudWatch
-* Amazon SNS
-* SonarCloud
-* Dependabot
-* Trivy
+- Node.js 20
+- Express
+- Docker
+- Docker Hub
+- Kubernetes (K3s)
+- GitHub
+- GitHub Actions
+- Amazon EC2
+- Amazon CloudWatch
+- Amazon SNS
+- SonarCloud
+- Dependabot
+- Trivy
+- Nginx
 
 ---
 
@@ -67,7 +62,7 @@ Levantar la aplicación
 npm start
 ```
 
-La API queda disponible en
+API disponible en:
 
 ```text
 http://localhost:3000
@@ -103,48 +98,25 @@ docker compose down
 
 ---
 
-# Orquestación y despliegue
-
-Durante la Evaluación Parcial 2 el entorno fue simulado utilizando Docker Compose.
-
-En la Evaluación Parcial 3 el microservicio fue desplegado sobre Kubernetes (K3s) utilizando una instancia Amazon EC2.
-
-Se implementaron los siguientes recursos:
-
-* Deployment
-* Service tipo NodePort
-* Dos réplicas del microservicio
-* Health Checks
-* Liveness Probe
-* Readiness Probe
-* Recursos de CPU y memoria
-
-La aplicación quedó disponible mediante un Service NodePort y fue validada desde navegador y mediante solicitudes HTTP.
-
----
-
 # Kubernetes
 
-La carpeta `k8s/` contiene los manifiestos utilizados para el despliegue.
+El despliegue del microservicio se realiza mediante Kubernetes (K3s) sobre una instancia Amazon EC2.
 
-## deployment.yaml
+Se implementaron:
 
-Define:
+- Deployment
+- Service tipo NodePort
+- Dos réplicas del microservicio
+- Health Checks
+- Readiness Probe
+- Liveness Probe
+- Recursos de CPU y memoria
 
-* Deployment
-* Dos Pods
-* Imagen Docker publicada en Docker Hub
-* Variables de entorno
-* Recursos
-* Health Checks
+Los manifiestos se encuentran en la carpeta:
 
-## service.yaml
-
-Define:
-
-* Service tipo NodePort
-* Puerto 30080
-* Exposición del microservicio hacia el exterior
+```text
+k8s/
+```
 
 ---
 
@@ -156,223 +128,174 @@ Workflow principal
 .github/workflows/ci-cd.yml
 ```
 
-## Etapas del pipeline
+## Flujo automatizado
 
-### 1. Pruebas automatizadas
+Cada vez que se realiza un **push** a la rama principal, GitHub Actions ejecuta automáticamente:
 
-* Checkout
-* Node.js
-* npm ci
-* npm test
+1. Checkout del repositorio.
+2. Instalación de dependencias (`npm ci`).
+3. Ejecución de pruebas (`npm test`).
+4. Auditoría de seguridad (`npm audit`).
+5. Análisis de calidad mediante SonarCloud.
+6. Validación del Quality Gate.
+7. Construcción de la imagen Docker.
+8. Escaneo de vulnerabilidades con Trivy.
+9. Publicación automática de la imagen en Docker Hub.
+10. Conexión automática vía SSH a Amazon EC2.
+11. Actualización del repositorio en la instancia.
+12. Reinicio del Deployment de Kubernetes.
+13. Verificación del estado de los Pods y del endpoint `/health`.
 
-### 2. Seguridad y calidad
-
-* npm audit
-* SonarCloud
-* Quality Gate
-
-Si existen problemas críticos de calidad o seguridad el pipeline puede detener su ejecución.
-
-### 3. Docker
-
-* Build imagen Docker
-* Escaneo mediante Trivy
-
-### 4. Despliegue
-
-* Docker Compose
-* Validación endpoint /health
-* Evidencia de trazabilidad
+De esta forma, cualquier cambio realizado en el código queda desplegado automáticamente en la aplicación sin intervención manual.
 
 ---
 
 # Monitoreo y Observabilidad
 
-Para la Evaluación Parcial 3 se implementó monitoreo utilizando Amazon CloudWatch.
+Se implementó monitoreo mediante Amazon CloudWatch.
 
 ## CloudWatch Agent
 
-Se instaló CloudWatch Agent sobre la instancia EC2 para recopilar métricas del sistema.
+Se recopilan métricas de:
 
-Se monitorean:
+- CPU
+- Memoria
+- Disco
+- Red
 
-* CPU
-* Memoria
-* Disco
-* Red
+Además se envían registros del sistema hacia CloudWatch Logs.
 
-Además se enviaron logs del sistema hacia CloudWatch Logs.
+## Dashboard
 
----
-
-# Dashboard
-
-Se creó un Dashboard denominado:
+Dashboard implementado:
 
 ```text
 MasterBikes-Dashboard
 ```
 
-El dashboard incorpora:
+Incluye:
 
-* CPU Utilization
-* Memory Used
-* Disk Used
-* Network In
-* Network Out
+- CPU Utilization
+- Memory Used
+- Disk Used
+- Network In
+- Network Out
 
-Estas métricas permiten observar el comportamiento del microservicio y detectar posibles anomalías durante su ejecución.
+## Alarmas
 
----
-
-# Alarmas
-
-Se implementó una alarma utilizando Amazon CloudWatch.
-
-Condición configurada:
+Se configuró una alarma con la condición:
 
 ```text
 CPUUtilization > 70%
 ```
 
-Cuando la condición se cumple:
-
-* Amazon SNS envía automáticamente un correo electrónico notificando la alerta.
+Cuando esta condición se cumple, Amazon SNS envía automáticamente una notificación por correo electrónico.
 
 ---
 
-# Docker Hub
+# Seguridad
 
-La imagen del microservicio fue publicada en Docker Hub para ser utilizada por Kubernetes durante el despliegue.
-
----
-
-# Dependabot
-
-Dependabot realiza revisiones automáticas semanales de:
-
-* npm
-* GitHub Actions
-
-Generando Pull Requests automáticos cuando existen actualizaciones o vulnerabilidades conocidas.
-
----
-
-# Seguridad y calidad
-
-El proyecto incorpora múltiples mecanismos de validación.
+El proyecto incorpora múltiples controles de seguridad y calidad:
 
 ## SonarCloud
 
-* Calidad de código
-* Code Smells
-* Bugs
-* Vulnerabilidades
-* Quality Gate
+- Code Smells
+- Bugs
+- Vulnerabilidades
+- Quality Gate
 
 ## npm audit
 
-Detección de vulnerabilidades en dependencias.
+Análisis de vulnerabilidades en dependencias.
 
 ## Trivy
 
-Escaneo de imágenes Docker antes del despliegue.
+Escaneo de vulnerabilidades sobre imágenes Docker antes del despliegue.
+
+## Dependabot
+
+Actualización automática semanal de:
+
+- Dependencias npm
+- GitHub Actions
 
 ---
 
 # Trazabilidad
 
-Durante cada ejecución del pipeline se registra:
+Cada ejecución del pipeline registra automáticamente:
 
-* Repositorio
-* Rama
-* Commit
-* Workflow
-* Número de ejecución
-* Estado del pipeline
+- Repositorio
+- Rama
+- Commit
+- Workflow
+- Número de ejecución
+- Estado del pipeline
 
 Esto permite identificar exactamente qué versión fue desplegada.
 
 ---
 
+# Arquitectura
+
+El proyecto integra los siguientes componentes:
+
+GitHub → GitHub Actions → SonarCloud → Docker → Docker Hub → Amazon EC2 → Kubernetes (K3s) → CloudWatch → Amazon SNS
+
+---
+
 # Modelo de trabajo
 
-Se utilizó GitFlow.
+Se utilizó GitFlow mediante las ramas:
 
-Ramas:
-
-* main
-* develop
-* feature/*
-* hotfix/*
+- `main`
+- `develop`
+- `feature/*`
+- `hotfix/*`
 
 ---
 
 # Convenciones de commits
 
-* feat
-* fix
-* docs
-* ci
-* test
-
----
-
-# Arquitectura implementada
-
-El proyecto integra:
-
-* GitHub
-* GitHub Actions
-* SonarCloud
-* Dependabot
-* Docker
-* Docker Hub
-* Kubernetes (K3s)
-* Amazon EC2
-* Amazon CloudWatch
-* Amazon SNS
-* Node.js
-* Express
+- `feat`
+- `fix`
+- `docs`
+- `ci`
+- `test`
 
 ---
 
 # Uso de Inteligencia Artificial
 
-Se utilizó Inteligencia Artificial como apoyo para:
-
-* estructurar documentación;
-* revisar configuraciones DevOps;
-* apoyar la creación de archivos base del pipeline CI/CD;
-* orientar la configuración de Kubernetes y CloudWatch.
-
-Todas las decisiones técnicas fueron revisadas, comprendidas y validadas por ambos integrantes antes de ser implementadas.
+Se utilizó Inteligencia Artificial como apoyo para estructurar documentación, revisar configuraciones DevOps y orientar la implementación del pipeline CI/CD, Kubernetes y monitoreo. Todas las decisiones técnicas fueron revisadas y validadas por los integrantes del proyecto.
 
 ---
 
 # Integrantes
 
-* Eduardo Cortés Monroy
-* Cristian Salas Millón
+- Eduardo Cortés Monroy
+- Cristian Salas Millón
 
 ---
 
-## Evidencias
+# Evidencias implementadas
 
-Evaluación Parcial 2
+## Evaluación Parcial 2
 
-* Pipeline CI/CD funcionando
-* Docker
-* SonarCloud
-* Dependabot
-* Trivy
+- Pipeline CI/CD
+- Docker
+- SonarCloud
+- Dependabot
+- Trivy
 
-Evaluación Parcial 3
+## Evaluación Parcial 3
 
-* Kubernetes sobre Amazon EC2
-* CloudWatch Dashboard
-* CloudWatch Agent
-* Alarma CPU >70%
-* Amazon SNS
-* API desplegada y funcionando
-* Microservicio accesible mediante NodePort
+- Kubernetes (K3s) sobre Amazon EC2
+- Docker Hub
+- Despliegue automático mediante GitHub Actions
+- CloudWatch Agent
+- Dashboard CloudWatch
+- Alarma CPU > 70%
+- Amazon SNS
+- API desplegada mediante NodePort
+- Actualización automática de la aplicación tras un `git push`
