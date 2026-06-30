@@ -7,7 +7,7 @@ const bicicletas = [
   { id: 1, nombre: 'Mountain Bike', precio: 300000, categoria: 'montana' },
   { id: 2, nombre: 'BMX', precio: 200000, categoria: 'urbana' },
   { id: 3, nombre: 'Ruta', precio: 500000, categoria: 'ruta' },
-  { id: 4, nombre: 'PRO PRUEBA', precio: 650000, categoria: 'gravel' }
+  { id: 4, nombre: 'PRUEBAAA', precio: 650000, categoria: 'gravel' }
 ]
 
 app.use(cors())
