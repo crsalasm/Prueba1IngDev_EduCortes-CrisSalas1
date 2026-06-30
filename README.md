@@ -2,7 +2,7 @@
 
 ## Descripción
 
-Este repositorio corresponde a la evolución del proyecto desarrollado durante las Evaluaciones Parciales de Ingeniería DevOps.
+Este repositorio corresponde a la evolución del proyecto desarrollado durante las Evaluaciones DevOps.
 
 Durante la Evaluación Parcial 1 se desarrolló el microservicio del catálogo de bicicletas de MasterBikes.
 
