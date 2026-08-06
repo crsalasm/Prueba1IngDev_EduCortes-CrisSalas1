@@ -41,6 +41,11 @@ async function main() {
   assert.equal(filtradas.body.length, 1)
   assert.equal(filtradas.body[0].categoria, 'ruta')
 
+  const porPrecioMinimo = await requestJson('/api/bicicletas?precioMin=250000')
+  assert.equal(porPrecioMinimo.response.status, 200)
+  assert.equal(porPrecioMinimo.body.length, 2)
+  assert.equal(porPrecioMinimo.body[0].precio >= 250000, true)
+
   const bicicleta = await requestJson('/api/bicicletas/2')
   assert.equal(bicicleta.response.status, 200)
   assert.equal(bicicleta.body.id, 2)
