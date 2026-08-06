@@ -50,6 +50,10 @@ async function main() {
   assert.equal(bicicletaNoEncontrada.response.status, 404)
   assert.equal(bicicletaNoEncontrada.body.error, 'Bicicleta no encontrada')
 
+  const bicicletaIdInvalido = await requestJson('/api/bicicletas/abc')
+  assert.equal(bicicletaIdInvalido.response.status, 400)
+  assert.equal(bicicletaIdInvalido.body.error, 'El identificador debe ser numerico')
+
   console.log('Pruebas OK')
 }
 
